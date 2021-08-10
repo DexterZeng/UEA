@@ -1,4 +1,3 @@
-# from include.Config import Config
 import tensorflow as tf
 from include.Model import build_SE, training
 from include.utils import get_hits_gen, getsim_matrix_cosine, get_hits_ma
@@ -14,25 +13,25 @@ from collections import defaultdict
 import os
 os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 
-def make_print_to_file(fileName, path='./'):
-    import sys
-    import os
-    import sys
-    import datetime
-
-    class Logger(object):
-        def __init__(self, filename="Default.log", path="./"):
-            self.terminal = sys.stdout
-            self.log = open(os.path.join(path, filename), "a", encoding='utf8',)
-
-        def write(self, message):
-            self.terminal.write(message)
-            self.log.write(message)
-
-        def flush(self):
-            pass
-    sys.stdout = Logger(fileName + '.log', path=path)
-    print(fileName.center(60,'*'))
+# def make_print_to_file(fileName, path='./'):
+#     import sys
+#     import os
+#     import sys
+#     import datetime
+#
+#     class Logger(object):
+#         def __init__(self, filename="Default.log", path="./"):
+#             self.terminal = sys.stdout
+#             self.log = open(os.path.join(path, filename), "a", encoding='utf8',)
+#
+#         def write(self, message):
+#             self.terminal.write(message)
+#             self.log.write(message)
+#
+#         def flush(self):
+#             pass
+#     sys.stdout = Logger(fileName + '.log', path=path)
+#     print(fileName.center(60,'*'))
 
 seed = 12306
 np.random.seed(seed)
@@ -49,7 +48,7 @@ if __name__ == '__main__':
     parser.add_argument('--inc', type=float, default=0.1)  # the increment of threshold
     parser.add_argument('--stopThres', type=float, default=0.45)  # the maximum of threshold
 
-    parser.add_argument('--adj', type=bool, default=False) # whether dynamically adjust the threshold
+    parser.add_argument('--adj', type=bool, default=True) # whether dynamically adjust the threshold
     parser.add_argument('--fixedThres', type=float, default=0.45) # if adj is false, one should set a fixed weight
 
 
@@ -61,8 +60,6 @@ if __name__ == '__main__':
     e2 = 'data/' + language + '/ent_ids_2'
     r1 = 'data/' + language + '/rel_ids_1'
     r2 = 'data/' + language + '/rel_ids_2'
-    # a1 = 'data/' + language + '/training_attrs_1'
-    # a2 = 'data/' + language + '/training_attrs_2'
     ill = 'data/' + language + '/ref_ent_ids'
     kg1 = 'data/' + language + '/triples_1'
     kg2 = 'data/' + language + '/triples_2'
@@ -78,7 +75,6 @@ if __name__ == '__main__':
     seed = 3  # 30% of seeds
     beta = 0.9  # weight of SE
 
-    make_print_to_file(language+ '_' + str(args.alpha) + '_' + str(args.beta), path='./logs/')
     t = time.time()
     e = len(set(loadfile(e1, 1)) | set(loadfile(e2, 1))) # print(e)
     ILL = loadfile(ill, 2)
@@ -96,8 +92,6 @@ if __name__ == '__main__':
         if i < 10500:# or i >= 15000:
             test_right.append(int(strs[0]))
 
-    # print(len(test_left))
-    # print(len(test_right))
     seedss = loadfile(sup, 2)
     KG1 = loadfile(kg1, 3)
     KG2 = loadfile(kg2, 3)
@@ -106,14 +100,12 @@ if __name__ == '__main__':
     lang = language.split('_')[0]
     with open(file='data/' + lang + '_en/' + lang + '_vectorList.json', mode='r', encoding='utf-8') as f:
         embedding_list = json.load(f)
-    # print(len(embedding_list))
     ne_vec = np.array(embedding_list)
 
     str_sim = np.load('./'+path+'/' + language + '/string_mat.npy')
     str_sim = 1 - str_sim
     aep_n = getsim_matrix_cosine(ne_vec, test_left, test_right)
     text_combine = aep_n * args.alpha + str_sim * (1 - args.alpha)
-    # get_hits_ma(text_combine, test)
 
     clenold = 0
     id2confi = dict()
@@ -149,9 +141,7 @@ if __name__ == '__main__':
             countt += 1
 
             aep = getsim_matrix_cosine(se_vec, test_left, test_right)
-            # get_hits_ma(aep, test)
             combine = aep * (1-args.beta) + text_combine * (args.beta)
-            # get_hits_ma(combine, test)
             if args.adj:
                 if thres >= args.stopThres:
                     thres = args.stopThres

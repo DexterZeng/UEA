@@ -2,11 +2,11 @@ import numpy as np
 import scipy
 
 from datetime import datetime
-from include.Config import Config
-log_file_path = 'logs/%s.log' % (Config.language.split('/')[-1])
-def write_to_log(path, content):
-    with open(path, 'a+') as f:
-        print(content, file=f)
+# from include.Config import Config
+# log_file_path = 'logs/%s.log' % (Config.language.split('/')[-1])
+# def write_to_log(path, content):
+#     with open(path, 'a+') as f:
+#         print(content, file=f)
 
 
 def get_hits(vec, test_pair, top_k=(1, 10, 50, 100)):
@@ -51,10 +51,10 @@ def get_hits_mrr(vec, test_pair, top_k=(1, 10, 50, 100)):
     print('For each left:')
     for i in range(len(top_lr)):
         print('Hits@%d: %.2f%%' % (top_k[i], top_lr[i] / len(test_pair) * 100))
-        write_to_log(log_file_path, 'Hits@%d: %.2f%%' % (top_k[i], top_lr[i] / len(test_pair) * 100))
+        # write_to_log(log_file_path, 'Hits@%d: %.2f%%' % (top_k[i], top_lr[i] / len(test_pair) * 100))
     print("MRR: " + str(mrr_sum_l/len(test_pair)))
-    write_to_log(log_file_path, "MRR: " + str(mrr_sum_l/len(test_pair)) + '')
-    write_to_log(log_file_path, datetime.now().strftime('%H-%M-%S'))
+    # write_to_log(log_file_path, "MRR: " + str(mrr_sum_l/len(test_pair)) + '')
+    # write_to_log(log_file_path, datetime.now().strftime('%H-%M-%S'))
 
 
 def get_combine_hits(se_vec, ae_vec, beta, test_pair, top_k=(1, 10, 50, 100)):
@@ -110,6 +110,6 @@ def get_combine_hits_mrr(se_vec, ae_vec, beta, test_pair, top_k=(1, 10, 50, 100)
 	print('For each left:')
 	for i in range(len(top_lr)):
 		print('Hits@%d: %.2f%%' % (top_k[i], top_lr[i] / LL * 100))
-		write_to_log(log_file_path, 'Hits@%d: %.2f%%' % (top_k[i], top_lr[i] / LL * 100))
-	write_to_log(log_file_path, "MRR: " + str(mrr_sum_l/len(test_pair)) + '')
-	write_to_log(log_file_path, datetime.now().strftime('%H-%M-%S'))
+	# 	write_to_log(log_file_path, 'Hits@%d: %.2f%%' % (top_k[i], top_lr[i] / LL * 100))
+	# write_to_log(log_file_path, "MRR: " + str(mrr_sum_l/len(test_pair)) + '')
+	# write_to_log(log_file_path, datetime.now().strftime('%H-%M-%S'))
