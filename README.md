@@ -3,8 +3,8 @@ The source code for the DASFAA 2021 paper: ***[Towards Entity Alignment in the O
 
 ## Dependencies
 
-* Python=3.6
-* Tensorflow-gpu=1.13.1
+* Python>=3.7 (tested on Python=3.8.10)
+* Tensorflow-gpu=2.x (tested on Tensorflow-gpu=2.6.0)
 * Scipy
 * Numpy
 * Scikit-learn
