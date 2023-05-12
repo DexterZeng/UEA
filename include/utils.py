@@ -1,4 +1,8 @@
-import tensorflow as tf
+#import tensorflow as tf
+
+import tensorflow.compat.v1 as tf
+tf.disable_v2_behavior()
+
 from include.Model import build_SE, training
 import time
 from include.Load import *
