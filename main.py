@@ -1,4 +1,9 @@
-import tensorflow as tf
+#import tensorflow as tf
+
+import tensorflow.compat.v1 as tf
+tf.disable_v2_behavior()
+
+
 from include.Model import build_SE, training
 from include.utils import get_hits_gen, getsim_matrix_cosine, get_hits_ma
 import time
@@ -8,6 +13,7 @@ import scipy
 from scipy import spatial
 import copy
 from collections import defaultdict
+
 
 
 import os
